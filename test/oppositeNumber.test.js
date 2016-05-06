@@ -1,7 +1,7 @@
 
 import { opposite } from '../src/oppositeNumber.js';
-let chai = require('chai');
-let expect = require('chai').expect;
+import { expect } from 'chai';
+
 
 describe('Find opposite number', () => {
 	it('Should find the opposite number', () => {
