@@ -1,42 +1,71 @@
-/*
-	The new "Avengers" movie has just been released! 
-	There are a lot of people at the cinema box office standing 
-	in a huge line. Each of them has a single 100, 50 or 
-	25 dollars bill. A "Avengers" ticket costs 25 dollars.
-
-	Vasya is currently working as a clerk. He wants to 
-	sell a ticket to every single person in this line.
-
-	Can Vasya sell a ticket to each person and give 
-	the change if he initially has no money and sells 
-	the tickets strictly in the order people follow 
-	in the line?
-
-	Return YES, if Vasya can sell a ticket to each 
-	person and give the change. Otherwise return NO.
-
-
-	/ === JavaScript ==
-
-	tickets([25, 25, 50]) // => YES 
-	tickets([25, 100])    // => NO. Vasya will not have enough money to give change to 100 dollars
-*/
-
 export function tickets(peopleInLine){
+
 	function contains(arr, v) {
 		return arr.indexOf(v) > -1;
 	}
 
-	function paymentchecker(VasyaTill,currentTicketPrice){
-		return peopleInLine.map(function(customerPayment){
-			var changeToGiveBack = 0;
-			if (customerPayment >= currentTicketPrice){
-				VasyaTill = VasyaTill + currentTicketPrice;
-				changeToGiveBack = customerPayment - currentTicketPrice;
-				return (VasyaTill <= changeToGiveBack) ? false : true;
-			}
-		}); 
+	function sortNumber(a,b) {
+	    return b - a;
 	}
-	return (contains(paymentchecker(0,25),false)) ? "NO" : "YES";
 
+	function totalAmount(arr){
+	 		return arr.reduce(function(previousValue, currentValue, currentIndex, array) {
+	  			return previousValue + currentValue;
+			});
+	 	};
+
+	function pluck(change,till,customersMoney){
+		var newTill = [];
+		till = till.sort(sortNumber);
+		var sum = change;
+		for (var i = 0;i < till.length; i++){
+			if(till[i] <= sum){
+				newTill.push(till[i]);
+				if (totalAmount(newTill) === change) {
+					return newTill;	 
+				}
+				sum = sum - till[i];
+			}
+		}
+	}
+
+	Array.prototype.removeItems = function(a){
+		var j;
+	  	for(var i =0;i<this.length;i++){
+	    	j = a.indexOf(this[i]);
+	    	if(j != -1) {
+				a.splice(j, 1);
+	    	}
+	  	}
+	  	return a; 
+	};
+
+	function paymentchecker(ticketPrice){
+		var till = [];
+		var isPossible = [];
+		peopleInLine.forEach(function(item,i,array){
+			var change = 0;
+			var arrayToRemove;
+			switch(true){
+				case (item === ticketPrice):
+				till.push(item);
+				isPossible.push(true);
+				break;
+				case (item > ticketPrice):
+					change = item - ticketPrice;
+					arrayToRemove = pluck(change,till,item);
+					if(typeof arrayToRemove != 'undefined'){
+						till = arrayToRemove.removeItems(till);
+					 	till.push(item);					 	
+					 	isPossible.push(true);
+					} else {
+						isPossible.push(false);
+					}
+				break;
+			}
+		});
+		return isPossible;
+	}
+
+ return (contains(paymentchecker(25),false)) ? "NO" : "YES"; 	
 }
