@@ -1,6 +1,3 @@
-getDivisorsCnt
-
-
 import { getDivisorsCnt } from '../src/getDivisorsCnt.js';
 import { expect } from 'chai';
 
