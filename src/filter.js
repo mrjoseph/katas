@@ -10,6 +10,8 @@ Array.prototype.filter = function(terms) {
   return terms.reduce(filter,list);
 };
 
-var results = list.filter(terms);
 
-console.log(results);
+var terms = ['p','c'];
+var list = ['apple','orange','peach','tropical fruit'];
+var results = list.filter(terms);
+console.log(results); // ["peach", "tropical fruit"]
